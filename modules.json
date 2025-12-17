@@ -13,7 +13,7 @@
   },
   "http": {
     "path": "http",
-    "entry": "http.py",
+    "entry": "server.py",
     "version": "1.0",
     "description": "Simple HTTP server for PINICOS"
   }
