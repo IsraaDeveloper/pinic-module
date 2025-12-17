@@ -1,53 +1,93 @@
 import os
 import sys
 
+HELP_TEXT = """
+PINICOS nano editor
+
+Commands:
+  :w     save file
+  :wq    save & exit
+  :q     exit without saving
+  :help  show this help
+"""
+
 def main():
     if len(sys.argv) < 2:
         print("Usage: nano <filename>")
         return
 
     filename = sys.argv[1]
-
-    # pastikan path relatif (tetap di virtual fs)
     path = os.path.abspath(filename)
 
+    buffer = []
+    modified = False
+
     print("=== PINICOS nano ===")
-    print("CTRL+D to save & exit")
-    print("---------------------")
+    print("Type :help for commands\n")
 
-    content = []
-
-    # jika file sudah ada → tampilkan dulu
+    # tampilkan isi file lama
     if os.path.exists(path):
         if os.path.isdir(path):
-            print("Error: Is a directory")
+            print("Error: target is a directory")
             return
 
-        print("[ Existing content ]")
+        print(f"--- {filename} (read) ---")
         with open(path, "r") as f:
-            old = f.read()
-            print(old)
-            if old:
-                content = old.splitlines()
+            for line in f:
+                print(line.rstrip())
+                buffer.append(line.rstrip())
+        print("--- end ---\n")
+    else:
+        print(f"[New file] {filename}\n")
 
-        print("---------------------")
-
-    print("Start typing:")
-
-    try:
-        while True:
+    while True:
+        try:
             line = input()
-            content.append(line)
-    except EOFError:
-        pass
+        except KeyboardInterrupt:
+            print("\n(use :q to quit)")
+            continue
 
-    # simpan file
+        # COMMAND MODE
+        if line.startswith(":"):
+            cmd = line[1:].strip()
+
+            if cmd == "w":
+                save_file(path, buffer)
+                modified = False
+
+            elif cmd == "wq":
+                save_file(path, buffer)
+                break
+
+            elif cmd == "q":
+                if modified:
+                    ans = input("Unsaved changes. Quit anyway? (y/n): ")
+                    if ans.lower() != "y":
+                        continue
+                break
+
+            elif cmd == "help":
+                print(HELP_TEXT)
+
+            else:
+                print("Unknown command, type :help")
+
+            continue
+
+        # EDIT MODE
+        buffer.append(line)
+        modified = True
+
+    print("Exit nano")
+
+def save_file(path, buffer):
     try:
+        os.makedirs(os.path.dirname(path), exist_ok=True)
         with open(path, "w") as f:
-            f.write("\n".join(content) + "\n")
-        print(f"\nSaved: {filename}")
+            f.write("\n".join(buffer) + "\n")
+        print(f"[Saved] {path}")
     except Exception as e:
-        print("Failed to save file:", e)
+        print("Save failed:", e)
 
 
 if __name__ == "__main__":
