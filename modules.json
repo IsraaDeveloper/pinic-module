@@ -1,0 +1,8 @@
+{
+  "hello": {
+    "path": "hello",
+    "entry": "hello.py",
+    "version": "1.0",
+    "description": "Simple hello command"
+  }
+}
