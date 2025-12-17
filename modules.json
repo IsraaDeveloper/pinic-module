@@ -10,5 +10,11 @@
     "entry": "nano.py",
     "version": "1.0",
     "description": "Simple text editor for PINICOS"
+  },
+  "http": {
+    "path": "http",
+    "entry": "http.py",
+    "version": "1.0",
+    "description": "Simple HTTP server for PINICOS"
   }
 }
