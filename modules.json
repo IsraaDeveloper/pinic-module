@@ -4,5 +4,11 @@
     "entry": "hello.py",
     "version": "1.0",
     "description": "Simple hello command"
+  },
+  "nano": {
+    "path": "nano",
+    "entry": "nano.py",
+    "version": "1.0",
+    "description": "Simple text editor for PINICOS"
   }
 }
