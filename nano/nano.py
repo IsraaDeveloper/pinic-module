@@ -17,7 +17,9 @@ def main():
         return
 
     filename = sys.argv[1]
-    path = os.path.abspath(filename)
+
+    # 🔥 FIX UTAMA DI SINI
+    path = os.path.join(os.getcwd(), filename)
 
     buffer = []
     modified = False
@@ -25,7 +27,6 @@ def main():
     print("=== PINICOS nano ===")
     print("Type :help for commands\n")
 
-    # tampilkan isi file lama
     if os.path.exists(path):
         if os.path.isdir(path):
             print("Error: target is a directory")
@@ -47,7 +48,6 @@ def main():
             print("\n(use :q to quit)")
             continue
 
-        # COMMAND MODE
         if line.startswith(":"):
             cmd = line[1:].strip()
 
@@ -74,7 +74,6 @@ def main():
 
             continue
 
-        # EDIT MODE
         buffer.append(line)
         modified = True
 
@@ -82,7 +81,6 @@ def main():
 
 def save_file(path, buffer):
     try:
-        os.makedirs(os.path.dirname(path), exist_ok=True)
         with open(path, "w") as f:
             f.write("\n".join(buffer) + "\n")
         print(f"[Saved] {path}")
